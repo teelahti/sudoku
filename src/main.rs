@@ -12,8 +12,11 @@ struct Args {
     /// the right amount of digits and blanks to fill the whole sudoku board.
     /// Empty slot can be marked with either '_' or '0'.
     /// Cannot be used in combination with --stdin.
-    /// EXAMPLE:
+    /// EXAMPLES:
+    /// simple
     /// -b "_____321_|___654___|_387_____|_6___935_|_7_468_9_|_295___8_|_____596_|___941___|_572_____"
+    /// hard
+    /// -b "___7__2_1|8_39_____|5________|_4__6____|_7____1__|___5___8_|____42__6|9________|_______3_"
     #[arg(short = 'b', long)]
     board: String,
 
