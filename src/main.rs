@@ -33,6 +33,10 @@ struct Args {
     /// Prints sudoku board in human readable format. Otherwise prints as one line.
     #[arg(short = 'f', long = "format-human")]
     human: bool,
+
+    /// Verbose mode prints more output
+    #[arg(short = 'v', long)]
+    verbose: bool,
 }
 
 fn main() {
@@ -49,18 +53,24 @@ fn main() {
     }
 
     let b: Board = input_b.parse().unwrap();
-    println!("Parsed board:\n\n{}", b);
 
-    if let Some(solved) = solve(b) {
+    if args.verbose {
+        println!("Parsed:\n{}", b);
+    }
+
+    if let Some((solved, duration)) = solve(b) {
         // TODO: Track multiple solutions
-        println!("Solved:\n\n{}", solved);
+        println!("Solved in {:?}:\n{}", duration, solved);
     } else {
         // TODO: Write to STDERR and return error code
         println!("No solution found");
     }
 }
 
-fn solve(b: Board) -> Option<Board> {
+// TODO: One major optimisation would be to start from the house with most digits to reduce permutations.
+fn solve(b: Board) -> Option<(Board, std::time::Duration)> {
+    let start = std::time::Instant::now();
+
     let mut stack = VecDeque::new();
     stack.push_front((0, b));
 
@@ -73,7 +83,7 @@ fn solve(b: Board) -> Option<Board> {
             if i == 81 {
                 // Found a solution
                 // TODO: Collect all solutions in case there are more
-                return Some(nb);
+                return Some((nb, start.elapsed()));
             }
         }
 
